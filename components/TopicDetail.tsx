@@ -4,6 +4,11 @@ import { generateLearningModule } from '../services/geminiService';
 import Spinner from './Spinner';
 import { ConceptIcon, VocabularyIcon, WorldIcon, ThinkingIcon } from './Icons';
 import LogicDiagramActivity from './LogicDiagramActivity';
+import BinaryAdventure from './BinaryAdventure';
+import BubbleSortActivity from './BubbleSortActivity';
+import NumberSystemConverterActivity from './NumberSystemConverterActivity';
+import LinkedListActivity from './LinkedListActivity';
+import BinarySearchTreeActivity from './BinarySearchTreeActivity';
 
 const ContentBlockDisplay: React.FC<{ block: ContentBlock }> = ({ block }) => {
     switch (block.type) {
@@ -111,7 +116,10 @@ const TopicDetail: React.FC<TopicDetailProps> = ({ topic, onClose }) => {
     setActiveSubTopic(subTopic);
     setView('content');
     
-    if (subTopic.id === 'a1-2-5') {
+    // IDs for custom interactive components
+    const interactiveComponentIds = ['a1-2-5', 'a1-2-0', 'b2-4-3', 'a1-2-1', 'b4-1-3-interactive', 'b4-1-4-interactive'];
+
+    if (interactiveComponentIds.includes(subTopic.id)) {
       setIsLoading(false);
       setError(null);
       setLearningModule(null);
@@ -145,6 +153,26 @@ const TopicDetail: React.FC<TopicDetailProps> = ({ topic, onClose }) => {
     setLearningModule(null);
     setError(null);
   };
+  
+  const renderInteractiveComponent = () => {
+    if (!activeSubTopic) return null;
+    switch (activeSubTopic.id) {
+        case 'a1-2-5':
+            return <LogicDiagramActivity />;
+        case 'a1-2-0':
+            return <BinaryAdventure />;
+        case 'b2-4-3':
+            return <BubbleSortActivity />;
+        case 'a1-2-1':
+            return <NumberSystemConverterActivity />;
+        case 'b4-1-3-interactive':
+            return <LinkedListActivity />;
+        case 'b4-1-4-interactive':
+            return <BinarySearchTreeActivity />;
+        default:
+            return null;
+    }
+  }
 
   return (
     <div
@@ -207,9 +235,7 @@ const TopicDetail: React.FC<TopicDetailProps> = ({ topic, onClose }) => {
                             
                             <h2 className="text-5xl font-bold text-white mb-6">{activeSubTopic?.title}</h2>
 
-                            {activeSubTopic?.id === 'a1-2-5' ? (
-                                <LogicDiagramActivity />
-                            ) : (
+                            {renderInteractiveComponent() ?? (
                                 <div className="min-h-[500px]">
                                     {isLoading && (
                                         <div className="flex flex-col items-center justify-center h-full text-gray-300">
